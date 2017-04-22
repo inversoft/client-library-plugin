@@ -1,0 +1,37 @@
+{
+  "uri": "/api/application",
+  "comments": [
+    "Creates an application. You can optionally specify an id for the application, but this is not required."
+  ],
+  "method": "post",
+  "methodName": "createApplication",
+  "underscoreMethodName": "create_application",
+  "successResponse": "ApplicationResponse",
+  "errorResponse": "Errors",
+  "params": [
+    {
+      "name": "applicationId",
+      "underscoreName": "application_id",
+      "comments": [
+        "(Optional) The id to use for the application."
+      ],
+      "type": "urlSegment",
+      "javaType": "UUID",
+      "csharpType": "Guid",
+      "rubyType": "String",
+      "phpType": "string"
+    },
+    {
+      "name": "request",
+      "underscoreName": "request",
+      "comments": [
+        "The application request that contains all of the information used to create the application."
+      ],
+      "type": "body",
+      "javaType": "ApplicationRequest",
+      "csharpType": "ApplicationRequest",
+      "rubyType": "OpenStruct, Hash",
+      "phpType": "array"
+    }
+  ]
+}

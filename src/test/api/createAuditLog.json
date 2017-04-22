@@ -1,0 +1,27 @@
+{
+  "uri": "/api/system/audit-log",
+  "comments": [
+    "Creates an audit log with the message and user name (usually an email). Audit logs should be written anytime you",
+    "make changes to the Passport database. When using the Passport Backend web interface, any changes are automatically",
+    "written to the audit log. However, if you are accessing the API, you must write the audit logs yourself."
+  ],
+  "method": "post",
+  "methodName": "createAuditLog",
+  "underscoreMethodName": "create_audit_log",
+  "successResponse": "Void",
+  "errorResponse": "Errors",
+  "params": [
+    {
+      "name": "request",
+      "underscoreName": "request",
+      "comments": [
+        "The audit log request that contains all of the information used to create the audit log entry."
+      ],
+      "type": "body",
+      "javaType": "AuditLogRequest",
+      "csharpType": "AuditLogRequest",
+      "rubyType": "OpenStruct, Hash",
+      "phpType": "array"
+    }
+  ]
+}

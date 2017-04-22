@@ -1,0 +1,25 @@
+{
+  "uri": "/api/user/comment",
+  "comments": [
+    "Adds a comment to the user's account."
+  ],
+  "method": "post",
+  "methodName": "changePassword",
+  "underscoreMethodName": "change_password",
+  "successResponse": "Void",
+  "errorResponse": "Errors",
+  "params": [
+    {
+      "name": "request",
+      "underscoreName": "request",
+      "comments": [
+        "The comment request that contains all of the information used to add the comment to the user."
+      ],
+      "type": "body",
+      "javaType": "UserCommentRequest",
+      "csharpType": "UserCommentRequest",
+      "rubyType": "OpenStruct, Hash",
+      "phpType": "array"
+    }
+  ]
+}

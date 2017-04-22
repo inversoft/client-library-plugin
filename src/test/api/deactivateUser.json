@@ -1,0 +1,25 @@
+{
+  "uri": "/api/user",
+  "comments": [
+    "Deactivates the user with the given id."
+  ],
+  "method": "delete",
+  "methodName": "deactivateUser",
+  "underscoreMethodName": "deactivate_user",
+  "successResponse": "Void",
+  "errorResponse": "Errors",
+  "params": [
+    {
+      "name": "userId",
+      "underscoreName": "user_id",
+      "comments": [
+        "The id of the user to deactivate."
+      ],
+      "type": "urlSegment",
+      "javaType": "UUID",
+      "csharpType": "Guid",
+      "rubyType": "String",
+      "phpType": "string"
+    }
+  ]
+}

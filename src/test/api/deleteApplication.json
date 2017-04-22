@@ -1,0 +1,42 @@
+{
+  "uri": "/api/application",
+  "comments": [
+    "Hard deletes an application. This is a dangerous operation and should not be used in most circumstances. This will",
+    "delete the application, any registrations for that application, metrics and reports for the application, all the",
+    "roles for the application, and any other data associated with the application. This operation could take a very",
+    "long time, depending on the amount of data in your database."
+  ],
+  "method": "delete",
+  "methodName": "deleteApplication",
+  "underscoreMethodName": "delete_application",
+  "successResponse": "Void",
+  "errorResponse": "Errors",
+  "params": [
+    {
+      "name": "applicationId",
+      "underscoreName": "application_id",
+      "comments": [
+        "The id of the application to deactivate."
+      ],
+      "type": "urlSegment",
+      "javaType": "UUID",
+      "csharpType": "Guid",
+      "rubyType": "String",
+      "phpType": "string"
+    },
+    {
+      "constant": true,
+      "name": "hardDelete",
+      "type": "urlParameter",
+      "parameterName": "hardDelete",
+      "value": "true"
+    }
+  ],
+  "restParameters": [
+    {
+      "type": "urlSegment",
+      "value": "applicationId",
+      "underscoreValue": "application_id"
+    }
+  ]
+}

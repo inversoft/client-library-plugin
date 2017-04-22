@@ -1,0 +1,38 @@
+{
+  "uri": "/api/user-action",
+  "comments": [
+    "Creates a user action. This action cannot be taken on a user until this call successfully returns. Anytime after",
+    "that the user action can be applied to any user."
+  ],
+  "method": "post",
+  "methodName": "createUserAction",
+  "underscoreMethodName": "create_user_action",
+  "successResponse": "UserActionResponse",
+  "errorResponse": "Errors",
+  "params": [
+    {
+      "name": "userActionId",
+      "underscoreName": "user_action_id",
+      "comments": [
+        "(Optional) The id for the user action."
+      ],
+      "type": "urlSegment",
+      "javaType": "UUID",
+      "csharpType": "Guid",
+      "rubyType": "String",
+      "phpType": "string"
+    },
+    {
+      "name": "request",
+      "underscoreName": "request",
+      "comments": [
+        "The user action request that contains all of the information used to create the user action."
+      ],
+      "type": "body",
+      "javaType": "UserActionRequest",
+      "csharpType": "UserActionRequest",
+      "rubyType": "OpenStruct, Hash",
+      "phpType": "array"
+    }
+  ]
+}

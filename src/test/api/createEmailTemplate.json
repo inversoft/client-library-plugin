@@ -1,0 +1,39 @@
+{
+  "uri": "/api/email/template",
+  "comments": [
+    "Creates an email template. You can optionally specify an id for the email template when calling this method, but it",
+    "is not required."
+  ],
+  "method": "post",
+  "methodName": "createEmailTemplate",
+  "underscoreMethodName": "create_email_template",
+  "successResponse": "EmailTemplateResponse",
+  "errorResponse": "Errors",
+  "params": [
+    {
+      "name": "emailTemplateId",
+      "underscoreName": "email_template_id",
+      "comments": [
+        "(Optional) The id for the template."
+      ],
+      "type": "urlSegment",
+      "javaType": "UUID",
+      "csharpType": "Guid",
+      "rubyType": "String",
+      "phpType": "string"
+    },
+    {
+      "name": "request",
+      "underscoreName": "request",
+      "comments": [
+        "The email template request that contains all of the information used to create the email",
+        "template."
+      ],
+      "type": "body",
+      "javaType": "EmailTemplateRequest",
+      "csharpType": "EmailTemplateRequest",
+      "rubyType": "OpenStruct, Hash",
+      "phpType": "array"
+    }
+  ]
+}

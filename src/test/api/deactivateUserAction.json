@@ -1,0 +1,25 @@
+{
+  "uri": "/api/user-action",
+  "comments": [
+    "Deactivates the user action with the given id."
+  ],
+  "method": "delete",
+  "methodName": "deactivateUserAction",
+  "underscoreMethodName": "deactivate_user_action",
+  "successResponse": "Void",
+  "errorResponse": "Errors",
+  "params": [
+    {
+      "name": "userActionId",
+      "underscoreName": "user_action_id",
+      "comments": [
+        "The id of the user action to deactivate."
+      ],
+      "type": "urlSegment",
+      "javaType": "UUID",
+      "csharpType": "Guid",
+      "rubyType": "String",
+      "phpType": "string"
+    }
+  ]
+}

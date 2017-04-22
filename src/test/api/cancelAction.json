@@ -1,0 +1,37 @@
+{
+  "uri": "/api/user/action",
+  "comments": [
+    "Cancels the user action."
+  ],
+  "method": "delete",
+  "methodName": "cancelAction",
+  "underscoreMethodName": "cancel_action",
+  "successResponse": "ActionResponse",
+  "errorResponse": "Errors",
+  "params": [
+    {
+      "name": "actionId",
+      "underscoreName": "action_id",
+      "comments": [
+        "The action id of the action to cancel."
+      ],
+      "type": "urlSegment",
+      "javaType": "UUID",
+      "csharpType": "Guid",
+      "rubyType": "String",
+      "phpType": "string"
+    },
+    {
+      "name": "request",
+      "underscoreName": "request",
+      "comments": [
+        "The action request that contains the information about the cancellation."
+      ],
+      "type": "body",
+      "javaType": "ActionRequest",
+      "csharpType": "ActionRequest",
+      "rubyType": "OpenStruct, Hash",
+      "phpType": "array"
+    }
+  ]
+}

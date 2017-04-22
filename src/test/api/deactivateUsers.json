@@ -1,0 +1,26 @@
+{
+  "uri": "/api/user/bulk",
+  "comments": [
+    "Deactivates the users with the given ids."
+  ],
+  "method": "delete",
+  "methodName": "deactivateUsers",
+  "underscoreMethodName": "deactivate_users",
+  "successResponse": "Void",
+  "errorResponse": "Errors",
+  "params": [
+    {
+      "name": "userIds",
+      "underscoreName": "user_ids",
+      "comments": [
+        "The ids of the users to deactivate."
+      ],
+      "type": "urlParameter",
+      "parameterName": "userId",
+      "javaType": "UUID",
+      "csharpType": "Guid",
+      "rubyType": "String",
+      "phpType": "string"
+    }
+  ]
+}
