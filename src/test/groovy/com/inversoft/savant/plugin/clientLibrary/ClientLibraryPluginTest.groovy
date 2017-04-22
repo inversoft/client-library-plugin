@@ -60,8 +60,7 @@ class ClientLibraryPluginTest {
 
     ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
     plugin.settings.debug = true
-    plugin.settings.template = Paths.get("src/test/client/java.client.ftl")
     plugin.settings.jsonDirectory = Paths.get("src/test/api")
-    plugin.buildClient()
+    plugin.buildClient(template: "src/test/client/java.client.ftl", outputFile: "build/Test.java")
   }
 }

@@ -26,9 +26,5 @@ import java.nio.file.Paths
 class ClientLibrarySettings {
   Path jsonDirectory = Paths.get("src/main/api")
 
-  Path template = Paths.get("src/main/client/java.client.ftl")
-
-  Path outputFile = Paths.get("src/main/java/com/inversoft/passport/client/PassportClient.java")
-
   boolean debug = false
 }

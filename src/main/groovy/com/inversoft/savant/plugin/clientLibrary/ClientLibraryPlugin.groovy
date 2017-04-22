@@ -23,10 +23,13 @@ import freemarker.template.TemplateException
 import groovy.io.FileType
 import groovy.json.JsonSlurper
 import org.savantbuild.domain.Project
+import org.savantbuild.io.FileTools
 import org.savantbuild.output.Output
 import org.savantbuild.plugin.groovy.BaseGroovyPlugin
 import org.savantbuild.runtime.BuildFailureException
 import org.savantbuild.runtime.RuntimeConfiguration
+
+import java.nio.file.Path
 
 /**
  * Inversoft clientLibrary plugin. This creates the RPM, DEB and ZIP bundles for a front-end.
@@ -44,10 +47,14 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
    * Creates the client using a FreeMaker template and a set of JSON files.
    * <p>
    * <pre>
-   *   clientLibrary.buildClient
+   *   clientLibrary.buildClient(template: "foo.ftl", outputFile: "bar.java")
    * </pre>
    */
-  void buildClient() {
+  void buildClient(parameters) {
+    if (!(parameters instanceof Map) || !parameters.containsKey("template") || !parameters.containsKey("outputFile")) {
+      throw new BuildFailureException("You must pass in parameters to the buildClient method like this:\n\n   clientLibrary.buildClient(template: \"foo.ftl\", outputFile: \"Bar.java\")")
+    }
+
     BeansWrapperBuilder builder = new BeansWrapperBuilder(Configuration.VERSION_2_3_23)
     builder.setExposeFields(true)
     builder.setSimpleMapWrapper(true)
@@ -75,14 +82,16 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
       root['apis'] << jsonSlurper.parseText(f.getText())
     }
 
-    Template template = config.getTemplate(settings.template.toAbsolutePath().toString())
+    Path outputFile = FileTools.toPath(parameters['outputFile'])
+    Path templateFile = FileTools.toPath(parameters['template'])
+    Template template = config.getTemplate(templateFile.toAbsolutePath().toString())
     try {
       template.process(root, writer)
 
       if (settings.debug) {
         println writer.toString()
       } else {
-        settings.outputFile.text = writer.toString()
+        outputFile.text = writer.toString()
       }
     } catch (TemplateException e) {
       throw new BuildFailureException("Unable to execute FreeMarker template", e)
