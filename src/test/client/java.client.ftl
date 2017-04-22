@@ -141,6 +141,8 @@ public class PassportClient {
                             .go();
   }
 
+  // ${camel_to_underscores(api.methodName)}
+
 [/#list]
   private <T> RESTClient<T, Errors> start(Class<T> type) {
     return new RESTClient<>(type, Errors.class).authorization(apiKey)

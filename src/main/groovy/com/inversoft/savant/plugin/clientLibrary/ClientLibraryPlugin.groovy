@@ -66,15 +66,18 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
 
     StringWriter writer = new StringWriter()
 
-    def apis = ['apis': []]
+    def root = [
+        'apis': [],
+        'camel_to_underscores': new CamelToUnderscores()
+    ]
     def jsonSlurper = new JsonSlurper()
     settings.jsonDirectory.eachFile(FileType.FILES) { f ->
-      apis['apis'] << jsonSlurper.parseText(f.getText())
+      root['apis'] << jsonSlurper.parseText(f.getText())
     }
 
     Template template = config.getTemplate(settings.template.toAbsolutePath().toString())
     try {
-      template.process(apis, writer)
+      template.process(root, writer)
 
       if (settings.debug) {
         println writer.toString()
