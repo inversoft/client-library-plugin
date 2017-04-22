@@ -17,13 +17,13 @@ import java.nio.file.Paths
  */
 savantVersion = "1.0.0"
 
-project(group: "com.inversoft.savant.plugin", name: "client-library", version: "0.1.1", licenses: ["Commercial"]) {
+project(group: "com.inversoft.savant.plugin", name: "client-library", version: "0.1.2", licenses: ["Commercial"]) {
   workflow {
     standard()
   }
 
   publishWorkflow {
-    subversion(repository: "http://svn.inversoft.com/internal/savant")
+    subversion(repository: "http://svn.inversoft.org/savant")
   }
 
   dependencies {
