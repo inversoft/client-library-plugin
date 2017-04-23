@@ -142,6 +142,9 @@ public class PassportClient {
   }
 
   // ${camel_to_underscores(api.methodName)}
+  // ${camel_to_underscores("retrieveJWTPublicKey")}
+  // ${camel_to_underscores("JWTPublicKey")}
+  // ${camel_to_underscores("retrievePublicKeyJWT")}
 
 [/#list]
   private <T> RESTClient<T, Errors> start(Class<T> type) {
