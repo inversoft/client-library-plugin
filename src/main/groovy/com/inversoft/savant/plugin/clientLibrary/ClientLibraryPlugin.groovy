@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015, Inversoft Inc., All Rights Reserved
+ * Copyright (c) 2014-2017, Inversoft Inc., All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,11 +55,11 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
       throw new BuildFailureException("You must pass in parameters to the buildClient method like this:\n\n   clientLibrary.buildClient(template: \"foo.ftl\", outputFile: \"Bar.java\")")
     }
 
-    BeansWrapperBuilder builder = new BeansWrapperBuilder(Configuration.VERSION_2_3_23)
+    BeansWrapperBuilder builder = new BeansWrapperBuilder(Configuration.VERSION_2_3_26)
     builder.setExposeFields(true)
     builder.setSimpleMapWrapper(true)
 
-    Configuration config = new Configuration(Configuration.VERSION_2_3_23)
+    Configuration config = new Configuration(Configuration.VERSION_2_3_26)
     config.setDefaultEncoding("UTF-8")
     config.setNumberFormat("computer")
     config.setTagSyntax(Configuration.SQUARE_BRACKET_TAG_SYNTAX)
@@ -78,8 +78,10 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
         'camel_to_underscores': new CamelToUnderscores()
     ]
     def jsonSlurper = new JsonSlurper()
-    settings.jsonDirectory.eachFile(FileType.FILES) { f ->
-      root['apis'] << jsonSlurper.parseText(f.getText())
+    def files = []
+    settings.jsonDirectory.eachFile(FileType.FILES) {files << it}
+    files.sort().each { f ->
+      root['apis'] << jsonSlurper.parseText(f.getText('UTF-8'))
     }
 
     Path outputFile = FileTools.toPath(parameters['outputFile'])
