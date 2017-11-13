@@ -57,7 +57,7 @@ release = loadPlugin(id: "org.savantbuild.plugin:release-git:${savantVersion}")
 groovy.settings.groovyVersion = "2.2"
 groovy.settings.javaVersion = "1.8"
 groovy.settings.jarManifest["Savant-Plugin-Class"] = "com.inversoft.savant.plugin.clientLibrary.ClientLibraryPlugin"
-groovyTestNG.settings.groovyVersion = "2.2"
+groovyTestNG.settings.groovyVersion = "2.4"
 groovyTestNG.settings.javaVersion = "1.8"
 idea.settings.imlFile = Paths.get("client-library-plugin.iml")
 
