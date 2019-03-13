@@ -1,2 +1,0 @@
-This Savant plugin is closed source and owned by Inversoft. It might be open sourced later, but for now, you should not
-be using it unless you are an Inversoft employee.
