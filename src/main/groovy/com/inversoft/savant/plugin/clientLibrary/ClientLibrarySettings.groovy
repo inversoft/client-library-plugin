@@ -26,5 +26,7 @@ import java.nio.file.Paths
 class ClientLibrarySettings {
   Path jsonDirectory = Paths.get("src/main/api")
 
+  Path domainDirectory = Paths.get("src/main/domain")
+
   boolean debug = false
 }
