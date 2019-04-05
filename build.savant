@@ -17,7 +17,7 @@ import java.nio.file.Paths
  */
 savantVersion = "1.0.0"
 
-project(group: "com.inversoft.savant.plugin", name: "client-library", version: "0.2.0", licenses: ["ApacheV2_0"]) {
+project(group: "com.inversoft.savant.plugin", name: "client-library", version: "0.3.0", licenses: ["ApacheV2_0"]) {
   workflow {
     standard()
   }
@@ -57,10 +57,10 @@ idea = loadPlugin(id: "org.savantbuild.plugin:idea:${savantVersion}")
 release = loadPlugin(id: "org.savantbuild.plugin:release-git:${savantVersion}")
 
 // Plugin settings
-groovy.settings.groovyVersion = "2.2"
+groovy.settings.groovyVersion = "2.4"
 groovy.settings.javaVersion = "1.8"
 groovy.settings.jarManifest["Savant-Plugin-Class"] = "com.inversoft.savant.plugin.clientLibrary.ClientLibraryPlugin"
-groovyTestNG.settings.groovyVersion = "2.2"
+groovyTestNG.settings.groovyVersion = "2.4"
 groovyTestNG.settings.javaVersion = "1.8"
 idea.settings.imlFile = Paths.get("client-library-plugin.iml")
 

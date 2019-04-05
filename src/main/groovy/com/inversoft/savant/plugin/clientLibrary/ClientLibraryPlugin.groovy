@@ -82,8 +82,10 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
       root['apis'] << jsonSlurper.parseText(f.getText())
     }
 
-    settings.domainDirectory.eachFile(FileType.FILES) { f ->
-      root['domain'] << jsonSlurper.parseText(f.getText())
+    if (settings.domainDirectory.toFile().exists()) {
+      settings.domainDirectory.eachFile(FileType.FILES) { f ->
+        root['domain'] << jsonSlurper.parseText(f.getText())
+      }
     }
 
     Path outputFile = FileTools.toPath(parameters['outputFile'])
