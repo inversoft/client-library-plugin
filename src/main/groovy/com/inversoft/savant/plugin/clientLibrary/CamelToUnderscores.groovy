@@ -34,11 +34,11 @@ class CamelToUnderscores implements TemplateMethodModelEx {
     StringBuilder build = new StringBuilder()
     for (int i = 0; i < c.length; i++) {
       if (Character.isUpperCase(c[i])) {
-        if (i == 0) {
-          build.append(Character.toLowerCase(c[i]))
-        } else {
-          build.append("_${Character.toLowerCase(c[i])}")
+        if ((i > 0 && !Character.isUpperCase(c[i - 1])) || (i < c.length - 1 && Character.isLowerCase(c[i + 1]))) {
+          build.append("_")
         }
+
+        build.append(Character.toLowerCase(c[i]))
       } else {
         build.append(c[i])
       }

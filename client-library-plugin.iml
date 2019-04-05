@@ -70,39 +70,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/.savant/cache/org/savantbuild/plugin/deb/1.0.0/deb-1.0.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$USER_HOME$/.savant/cache/org/savantbuild/plugin/deb/1.0.0/deb-1.0.0-src.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/.savant/cache/org/savantbuild/plugin/dependency/1.0.0/dependency-1.0.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$USER_HOME$/.savant/cache/org/savantbuild/plugin/dependency/1.0.0/dependency-1.0.0-src.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/.savant/cache/org/savantbuild/plugin/file/1.0.0/file-1.0.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$USER_HOME$/.savant/cache/org/savantbuild/plugin/file/1.0.0/file-1.0.0-src.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$USER_HOME$/.savant/cache/org/savantbuild/savant-io/1.0.0/savant-io-1.0.0.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -114,11 +81,11 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/.savant/cache/org/freemarker/freemarker/2.3.23/freemarker-2.3.23.jar!/" />
+          <root url="jar://$USER_HOME$/.savant/cache/org/freemarker/freemarker/2.3.26+incubating/freemarker-2.3.26+incubating.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$USER_HOME$/.savant/cache/org/freemarker/freemarker/2.3.23/freemarker-2.3.23-src.jar!/" />
+          <root url="jar://$USER_HOME$/.savant/cache/org/freemarker/freemarker/2.3.26+incubating/freemarker-2.3.26+incubating-src.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -185,17 +152,6 @@
         <JAVADOC />
         <SOURCES>
           <root url="jar://$USER_HOME$/.savant/cache/org/tukaani/xz/1.4.0/xz-1.4.0-src.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/.savant/cache/org/ow2/asm/asm/5.0.3/asm-5.0.3.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$USER_HOME$/.savant/cache/org/ow2/asm/asm/5.0.3/asm-5.0.3-src.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
