@@ -163,4 +163,10 @@ public class PassportClient {
                                             .connectTimeout(connectTimeout)
                                             .readTimeout(readTimeout);
   }
+
+  [#list domain as d]
+  public static class ${d.type} {
+    // TODO Fill out the rest of the domain
+  }
+  [/#list]
 }

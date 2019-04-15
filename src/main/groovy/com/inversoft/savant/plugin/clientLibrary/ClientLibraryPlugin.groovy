@@ -39,8 +39,26 @@ import java.nio.file.Path
 class ClientLibraryPlugin extends BaseGroovyPlugin {
   ClientLibrarySettings settings = new ClientLibrarySettings()
 
+  Configuration config
+
   ClientLibraryPlugin(Project project, RuntimeConfiguration runtimeConfiguration, Output output) {
     super(project, runtimeConfiguration, output)
+
+    BeansWrapperBuilder builder = new BeansWrapperBuilder(Configuration.VERSION_2_3_26)
+    builder.setExposeFields(true)
+    builder.setSimpleMapWrapper(true)
+
+    config = new Configuration(Configuration.VERSION_2_3_26)
+    config.setDefaultEncoding("UTF-8")
+    config.setNumberFormat("computer")
+    config.setTagSyntax(Configuration.SQUARE_BRACKET_TAG_SYNTAX)
+    config.setObjectWrapper(builder.build())
+    config.setNumberFormat("computer")
+    try {
+      config.setTemplateLoader(new FileTemplateLoader(new File("/")))
+    } catch (IOException e) {
+      throw new RuntimeException(e)
+    }
   }
 
   /**
@@ -55,54 +73,87 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
       throw new BuildFailureException("You must pass in parameters to the buildClient method like this:\n\n   clientLibrary.buildClient(template: \"foo.ftl\", outputFile: \"Bar.java\")")
     }
 
-    BeansWrapperBuilder builder = new BeansWrapperBuilder(Configuration.VERSION_2_3_26)
-    builder.setExposeFields(true)
-    builder.setSimpleMapWrapper(true)
-
-    Configuration config = new Configuration(Configuration.VERSION_2_3_26)
-    config.setDefaultEncoding("UTF-8")
-    config.setNumberFormat("computer")
-    config.setTagSyntax(Configuration.SQUARE_BRACKET_TAG_SYNTAX)
-    config.setObjectWrapper(builder.build())
-    config.setNumberFormat("computer")
-    try {
-      config.setTemplateLoader(new FileTemplateLoader(new File("/")))
-    } catch (IOException e) {
-      throw new RuntimeException(e)
-    }
-
-    StringWriter writer = new StringWriter()
-
     def root = [
-        'apis': [],
+        'apis'                : [],
+        'domain'              : [],
         'camel_to_underscores': new CamelToUnderscores()
     ]
     def jsonSlurper = new JsonSlurper()
     def files = []
-    settings.jsonDirectory.eachFile(FileType.FILES) {files << it}
+    settings.jsonDirectory.eachFile(FileType.FILES) { files << it }
     files.sort().each { f ->
-      root['apis'] << jsonSlurper.parseText(f.getText('UTF-8'))
+      root['apis'] << jsonSlurper.parse(f.toFile())
     }
 
     if (settings.domainDirectory.toFile().exists()) {
       settings.domainDirectory.eachFile(FileType.FILES) { f ->
-        root['domain'] << jsonSlurper.parseText(f.getText())
+        root['domain'] << jsonSlurper.parse(f.toFile())
       }
     }
 
-    Path outputFile = FileTools.toPath(parameters['outputFile'])
-    Path templateFile = FileTools.toPath(parameters['template'])
+    outputFile(FileTools.toPath(parameters['outputFile']), FileTools.toPath(parameters['template']), root, config)
+  }
+
+  void outputFile(Path outputFile, Path templateFile, root, Configuration config) {
     Template template = config.getTemplate(templateFile.toAbsolutePath().toString())
     try {
-      template.process(root, writer)
 
+      def writer
       if (settings.debug) {
-        println writer.toString()
+        writer = new PrintWriter(System.out)
       } else {
-        outputFile.text = writer.toString()
+        writer = outputFile.newWriter()
       }
+
+      template.process(root, writer)
     } catch (TemplateException e) {
       throw new BuildFailureException("Unable to execute FreeMarker template", e)
     }
+  }
+
+  /**
+   * Builds the domain on a per file basis.
+   */
+  void buildDomain(parameters) {
+    if (!(parameters instanceof Map) || !parameters.containsKey("template") || !parameters.containsKey("outputDir") || !parameters.containsKey("extension")) {
+      throw new BuildFailureException("You must pass in parameters to the buildClient method like this:\n\n   clientLibrary.buildClient(template: \"foo.ftl\", outputDir: \"src\", extension: \"java\")")
+    }
+
+    if (!parameters.containsKey("layout")) {
+      parameters.put("layout", this.&defaultLayout)
+    }
+
+    def root = [
+        'domain': {},
+        'camel_to_underscores': new CamelToUnderscores()
+    ]
+
+    def jsonSlurper = new JsonSlurper()
+
+    if (settings.domainDirectory.toFile().exists()) {
+      settings.domainDirectory.eachFile(FileType.FILES) { f ->
+        root.domain = jsonSlurper.parse(f.toFile())
+
+        outputFile(
+            parameters["layout"](FileTools.toPath(parameters['outputDir']), f.getFileName().toString(), parameters['extension']),
+            FileTools.toPath(parameters["template"]),
+            root,
+            config
+        )
+      }
+    }
+
+
+  }
+
+  private static defaultLayout(Path root, String name, String extension) {
+    def parts = name.split("\\.")
+    def packageName = parts[0..<(parts.size()-2)]
+    Path ret = root
+    for(String part: packageName) {
+      ret = ret.resolve(part)
+    }
+    ret.toFile().mkdirs()
+    return ret.resolve(parts[parts.size() - 2] + "." + extension)
   }
 }

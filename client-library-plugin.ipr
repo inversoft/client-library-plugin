@@ -16,7 +16,7 @@
   <component name="DependencyValidationManager">
     <option name="SKIP_IMPORT_STATEMENTS" value="false" />
   </component>
-  <component name="Encoding" addBOMForNewFiles="with NO BOM">
+  <component name="Encoding">
     <file url="PROJECT" charset="UTF-8" />
   </component>
   <component name="IdProvider" IDEtalkID="C9EB42824EAD9BC85E445D7C3B5A5034" />
@@ -27,8 +27,8 @@
     <version value="1.0" />
   </component>
   <component name="KotlinCommonCompilerArguments">
-    <option name="languageVersion" value="1.1" />
     <option name="apiVersion" value="1.1" />
+    <option name="languageVersion" value="1.1" />
   </component>
   <component name="Palette2">
     <group name="Swing">
@@ -225,6 +225,10 @@
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" default="false" project-jdk-name="Java 1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="TemplateDataLanguageMappings">
+    <file url="file://$PROJECT_DIR$/src/test/client/java.client.ftl" dialect="JAVA" />
+    <file url="file://$PROJECT_DIR$/src/test/client/java.domain.ftl" dialect="JAVA" />
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
