@@ -1,4 +1,5 @@
 {
+  "packageName" : "com.inversoft.error",
   "type" : "Error",
   "description" : "/**\n * Defines an error.\n *\n * @author Brian Pontarelli\n */\n",
   "fields" : {

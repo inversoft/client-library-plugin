@@ -22,6 +22,7 @@ import freemarker.template.Template
 import freemarker.template.TemplateException
 import groovy.io.FileType
 import groovy.json.JsonSlurper
+import groovy.json.internal.LazyMap
 import org.savantbuild.domain.Project
 import org.savantbuild.io.FileTools
 import org.savantbuild.output.Output
@@ -30,6 +31,7 @@ import org.savantbuild.runtime.BuildFailureException
 import org.savantbuild.runtime.RuntimeConfiguration
 
 import java.nio.file.Path
+import java.util.function.Function
 
 /**
  * Inversoft clientLibrary plugin. This creates the RPM, DEB and ZIP bundles for a front-end.
@@ -124,36 +126,72 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
     }
 
     def root = [
-        'domain': {},
-        'camel_to_underscores': new CamelToUnderscores()
+        'domain': [],
+        'domain_item': new LazyMap(),
+        'camel_to_underscores': new CamelToUnderscores(),
+        'type_to_package': new HashMap<String, String>(),
+        'types_in_use': new HashSet<String>(),
+        'packages': new HashSet<String>()
     ]
 
     def jsonSlurper = new JsonSlurper()
 
     if (settings.domainDirectory.toFile().exists()) {
       settings.domainDirectory.eachFile(FileType.FILES) { f ->
-        root.domain = jsonSlurper.parse(f.toFile())
-
-        outputFile(
-            parameters["layout"](FileTools.toPath(parameters['outputDir']), f.getFileName().toString(), parameters['extension']),
-            FileTools.toPath(parameters["template"]),
-            root,
-            config
-        )
+        root['domain'] << jsonSlurper.parse(f.toFile())
       }
     }
 
+    root.domain.each { domain ->
+      root.type_to_package.put(domain.type, domain.packageName)
+    }
 
+    root.domain.each { LazyMap domain ->
+      root.domain_item = domain
+      root.types_in_use = collectTypes(domain)
+      root.packages = collectPackages(root.types_in_use, root.type_to_package)
+
+      outputFile(
+          parameters["layout"](FileTools.toPath(parameters['outputDir']), domain.packageName + "." + domain.type, parameters['extension']),
+          FileTools.toPath(parameters["template"]),
+          root,
+          config
+      )
+    }
+  }
+
+  private static Set<String> collectTypes(LazyMap o, Set<String> types = new HashSet<>()) {
+    o.each { key, value ->
+      if (key == "type") {
+        types.add(value.toString())
+      } else if (value instanceof LazyMap) {
+        collectTypes(value, types)
+      } else if (value instanceof Collection) {
+        value.each {
+          if (it instanceof LazyMap) {
+            collectTypes(it, types)
+          }
+        }
+      }
+    }
+
+    return types
+  }
+
+  private static Set<String> collectPackages(Set<String> types, HashMap<String, String> typesToPackages) {
+    Set<String> packages = types.collect { typesToPackages.get(it) }
+    packages.removeIf { it == null }
+    return packages
   }
 
   private static defaultLayout(Path root, String name, String extension) {
     def parts = name.split("\\.")
-    def packageName = parts[0..<(parts.size()-2)]
+    def packageName = parts[0..<(parts.size()-1)]
     Path ret = root
     for(String part: packageName) {
       ret = ret.resolve(part)
     }
     ret.toFile().mkdirs()
-    return ret.resolve(parts[parts.size() - 2] + "." + extension)
+    return ret.resolve(parts[parts.size() - 1] + "." + extension)
   }
 }
