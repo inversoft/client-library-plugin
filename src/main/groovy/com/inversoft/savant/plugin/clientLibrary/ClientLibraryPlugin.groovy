@@ -23,6 +23,7 @@ import freemarker.template.TemplateException
 import groovy.io.FileType
 import groovy.json.JsonSlurper
 import groovy.json.internal.LazyMap
+import org.inversoft.Java2Json
 import org.savantbuild.domain.Project
 import org.savantbuild.io.FileTools
 import org.savantbuild.output.Output
@@ -31,7 +32,7 @@ import org.savantbuild.runtime.BuildFailureException
 import org.savantbuild.runtime.RuntimeConfiguration
 
 import java.nio.file.Path
-import java.util.function.Function
+import java.nio.file.Paths
 
 /**
  * Inversoft clientLibrary plugin. This creates the RPM, DEB and ZIP bundles for a front-end.
@@ -126,12 +127,12 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
     }
 
     def root = [
-        'domain': [],
-        'domain_item': new LazyMap(),
+        'domain'              : [],
+        'domain_item'         : new LazyMap(),
         'camel_to_underscores': new CamelToUnderscores(),
-        'type_to_package': new HashMap<String, String>(),
-        'types_in_use': new HashSet<String>(),
-        'packages': new HashSet<String>()
+        'type_to_package'     : new HashMap<String, String>(),
+        'types_in_use'        : new HashSet<String>(),
+        'packages'            : new HashSet<String>()
     ]
 
     def jsonSlurper = new JsonSlurper()
@@ -160,6 +161,14 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
     }
   }
 
+  void generateDomainJson(parameters) {
+    if (!parameters.containsKey("srcDir") || !parameters.containsKey("outDir")) {
+      throw new BuildFailureException("You must specify a srcDir and an outDir")
+    }
+
+    new Java2Json((Path) Paths.get(parameters["srcDir"]), (Path) Paths.get(parameters["outDir"])).run()
+  }
+
   private static Set<String> collectTypes(LazyMap o, Set<String> types = new HashSet<>()) {
     o.each { key, value ->
       if (key == "type") {
@@ -186,9 +195,9 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
 
   private static defaultLayout(Path root, String name, String extension) {
     def parts = name.split("\\.")
-    def packageName = parts[0..<(parts.size()-1)]
+    def packageName = parts[0..<(parts.size() - 1)]
     Path ret = root
-    for(String part: packageName) {
+    for (String part : packageName) {
       ret = ret.resolve(part)
     }
     ret.toFile().mkdirs()
