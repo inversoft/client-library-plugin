@@ -166,7 +166,7 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
       throw new BuildFailureException("You must specify a srcDir and an outDir")
     }
 
-    new Java2Json((Path) Paths.get(parameters["srcDir"]), (Path) Paths.get(parameters["outDir"])).run()
+    new Java2Json((Path) Paths.get(parameters["srcDir"]), (Path) Paths.get(parameters["outDir"]), parameters["domainExcludeGlobs"] ?: [], parameters["domainIncludeGlobs"] ?: [], settings.debug).run()
   }
 
   private static Set<String> collectTypes(LazyMap o, Set<String> types = new HashSet<>()) {
