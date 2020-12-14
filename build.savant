@@ -75,7 +75,7 @@ target(name: "jar", description: "JARs the project", dependsOn: ["compile"]) {
 }
 
 target(name: "test", description: "Runs the project's tests", dependsOn: ["jar"]) {
-  //groovyTestNG.test() // TBD fix this
+  groovyTestNG.test()
 }
 
 target(name: "doc", description: "Generate the project's JavaDoc", dependsOn: ["jar"]) {
