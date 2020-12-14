@@ -78,6 +78,7 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
 
     def root = [
         'apis'                : [],
+        'endpoints'           : [:],
         'domain'              : [],
         'camel_to_underscores': new CamelToUnderscores()
     ]
@@ -85,7 +86,16 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
     def files = []
     settings.jsonDirectory.eachFile(FileType.FILES) { files << it }
     files.sort().each { f ->
-      root['apis'] << jsonSlurper.parse(f.toFile())
+      def json = jsonSlurper.parse(f.toFile())
+      root['apis'] << json
+
+      // gather up json by endpoint/http method so that we can build openapi file
+      def endpoint = json.uri
+      if (!root['endpoints'][endpoint]) {
+        root['endpoints'][endpoint] = [:]
+      }
+      def http_method = json.method
+      root['endpoints'][endpoint][http_method] = json
     }
 
     if (settings.domainDirectory.toFile().exists()) {
