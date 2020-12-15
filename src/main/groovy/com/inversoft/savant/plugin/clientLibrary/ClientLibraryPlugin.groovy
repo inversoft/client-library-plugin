@@ -91,26 +91,35 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
       root['apis'] << json
 
       // gather up json by endpoint/http method so that we can build openapi file
-      def endpoint = json.uri
-      if (!root['endpoints'][endpoint]) {
-        root['endpoints'][endpoint] = [:]
-      }
+      // most endpoints only have one option, but some have two, with and without a param
+      def endpoints = buildOpenapiUri(json.uri, json.params)
+      def normalEndpoint = endpoints["normal"]
+      def endpointWithOptionalParam = endpoints["withOptionalParam"]
       def http_method = json.method
-      root['endpoints'][endpoint][http_method] = json
+      
+      if (!root['endpoints'][normalEndpoint]) {
+        root['endpoints'][normalEndpoint] = [:]
+      }
+      def onlyNormal = endpointWithOptionalParam == null
+      if (onlyNormal) {
+        // handle normal case
+        root['endpoints'][normalEndpoint][http_method] = json
 
-      if (json.params) {
-        def optionalUrlSegment = json.params.find { it.required != null && it.required == false && it.type == "urlSegment"  } 
-        if (optionalUrlSegment != null ) {
-          // if it is a url segment but not required, we need to add it here
-          // this lets openapi create two endpoints, one with the segment and the other without
-          if (!root['endpoints_w_optional_path_params'][endpoint]) {
-            root['endpoints_w_optional_path_params'][endpoint] = [:]
-          }
-          def modifiable_json = jsonSlurper.parseText(JsonOutput.toJson(json))
-          // remove it from a copy
-          modifiable_json.params = modifiable_json.params - optionalUrlSegment
-          root['endpoints_w_optional_path_params'][endpoint][http_method] = modifiable_json
+      } else {
+        // handle case with param
+        if (!root['endpoints'][endpointWithOptionalParam]) {
+          root['endpoints'][endpointWithOptionalParam] = [:]
         }
+        root['endpoints'][endpointWithOptionalParam][http_method] = json
+        
+        // handle with optional params
+  
+        def optionalUrlSegment = json.params.find { it.required != null && it.required == false && it.type == "urlSegment"  } 
+
+        // remove the optional param from a copy. the normal endpoint doesn't get the optional segment param
+        def modifiable_json = jsonSlurper.parseText(JsonOutput.toJson(json))
+        modifiable_json.params = modifiable_json.params - optionalUrlSegment
+        root['endpoints'][normalEndpoint][http_method] = modifiable_json 
       }
     }
 
@@ -124,22 +133,22 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
   }
 
   //look for urlsegments
-  List buildOpenapiUri(uri, params) {
+  Map buildOpenapiUri(uri, params) {
     if (!params || params.size == 0) {  
-      return [uri]
+      return ["normal": uri]
     }
     def urlSegments = params.findAll { it.type == "urlSegment" }
     if (!urlSegments || urlSegments.size == 0) {  
-      return [uri]
+      return ["normal": uri]
     }
     def optionalUrlSegment = urlSegments.find { it.required != null && it.required == false }
     if (optionalUrlSegment == null) {
       // only the one url segment, it's required TODO might not be invarant
-      return [uri+"/{"+urlSegments[0].name+"}"]
+      return ["normal": uri+"/{"+urlSegments[0].name+"}"]
     } 
-    def toReturn = []
-    toReturn << uri+"/{"+optionalUrlSegment.name+"}"
-    toReturn << uri
+    def toReturn = [:]
+    toReturn["withOptionalParam"] = uri+"/{"+optionalUrlSegment.name+"}"
+    toReturn["normal"] = uri
   
     return toReturn
   }

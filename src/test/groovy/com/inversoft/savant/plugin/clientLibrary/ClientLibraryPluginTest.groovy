@@ -60,7 +60,7 @@ class ClientLibraryPluginTest {
     ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
     def uri = "abc"
     def params = []
-    assert plugin.buildOpenapiUri(uri,params) == ["abc"]
+    assert plugin.buildOpenapiUri(uri,params) == ["normal":"abc"]
   }
 
   @Test
@@ -68,7 +68,7 @@ class ClientLibraryPluginTest {
     ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
     def uri = "abc"
     def params = [["type": "urlParameter", "name":"foo"]]
-    assert plugin.buildOpenapiUri(uri,params) == ["abc"]
+    assert plugin.buildOpenapiUri(uri,params) == ["normal":"abc"]
   }
 
   @Test
@@ -76,7 +76,7 @@ class ClientLibraryPluginTest {
     ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
     def uri = "abc"
     def params = [["type": "urlSegment", "name":"foo","required":true]]
-    assert plugin.buildOpenapiUri(uri,params) == ["abc/{foo}"]
+    assert plugin.buildOpenapiUri(uri,params) == ["normal":"abc/{foo}"]
   }
 
   @Test
@@ -84,7 +84,7 @@ class ClientLibraryPluginTest {
     ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
     def uri = "abc"
     def params = [["type": "urlSegment", "name":"foo","required":false]]
-    assert plugin.buildOpenapiUri(uri,params) == ["abc/{foo}", "abc"]
+    assert plugin.buildOpenapiUri(uri,params) == ["withOptionalParam": "abc/{foo}", "normal":"abc"]
   }
 
   @Test
@@ -92,7 +92,7 @@ class ClientLibraryPluginTest {
     ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
     def uri = "abc"
     def params = [["type": "urlSegment", "name":"foo","required":false], ["type": "urlParameter", "name":"bar"]]
-    assert plugin.buildOpenapiUri(uri,params) == ["abc/{foo}", "abc"]
+    assert plugin.buildOpenapiUri(uri,params) == ["withOptionalParam": "abc/{foo}", "normal":"abc"]
   }
 
   @Test
