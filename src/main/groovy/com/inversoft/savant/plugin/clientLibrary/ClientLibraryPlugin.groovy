@@ -21,6 +21,7 @@ import freemarker.template.Configuration
 import freemarker.template.Template
 import freemarker.template.TemplateException
 import groovy.io.FileType
+import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovy.json.internal.LazyMap
 import org.inversoft.Java2Json
@@ -77,10 +78,11 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
     }
 
     def root = [
-        'apis'                : [],
-        'endpoints'           : [:],
-        'domain'              : [],
-        'camel_to_underscores': new CamelToUnderscores()
+        'apis'                                     : [],
+        'endpoints'                                : [:],
+        'endpoints_w_optional_path_params'         : [:],
+        'domain'                                   : [],
+        'camel_to_underscores'                     : new CamelToUnderscores()
     ]
     def jsonSlurper = new JsonSlurper()
     def files = []
@@ -96,6 +98,21 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
       }
       def http_method = json.method
       root['endpoints'][endpoint][http_method] = json
+
+      if (json.params) {
+        def optionalUrlSegment = json.params.find { it.required != null && it.required == false && it.type == "urlSegment"  } 
+        if (optionalUrlSegment != null ) {
+          // if it is a url segment but not required, we need to add it here
+          // this lets openapi create two endpoints, one with the segment and the other without
+          if (!root['endpoints_w_optional_path_params'][endpoint]) {
+            root['endpoints_w_optional_path_params'][endpoint] = [:]
+          }
+          def modifiable_json = jsonSlurper.parseText(JsonOutput.toJson(json))
+          // remove it from a copy
+          modifiable_json.params = modifiable_json.params - optionalUrlSegment
+          root['endpoints_w_optional_path_params'][endpoint][http_method] = modifiable_json
+        }
+      }
     }
 
     if (settings.domainDirectory.toFile().exists()) {
