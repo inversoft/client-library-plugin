@@ -80,7 +80,6 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
     def root = [
         'apis'                                     : [],
         'endpoints'                                : [:],
-        'endpoints_w_optional_path_params'         : [:],
         'domain'                                   : [],
         'camel_to_underscores'                     : new CamelToUnderscores()
     ]
@@ -122,6 +121,27 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
     }
 
     outputFile(FileTools.toPath(parameters['outputFile']), FileTools.toPath(parameters['template']), root, config)
+  }
+
+  //look for urlsegments
+  List buildOpenapiUri(uri, params) {
+    if (!params || params.size == 0) {  
+      return [uri]
+    }
+    def urlSegments = params.findAll { it.type == "urlSegment" }
+    if (!urlSegments || urlSegments.size == 0) {  
+      return [uri]
+    }
+    def optionalUrlSegment = urlSegments.find { it.required != null && it.required == false }
+    if (optionalUrlSegment == null) {
+      // only the one url segment, it's required TODO might not be invarant
+      return [uri+"/{"+urlSegments[0].name+"}"]
+    } 
+    def toReturn = []
+    toReturn << uri+"/{"+optionalUrlSegment.name+"}"
+    toReturn << uri
+  
+    return toReturn
   }
 
   void outputFile(Path outputFile, Path templateFile, root, Configuration config) {
