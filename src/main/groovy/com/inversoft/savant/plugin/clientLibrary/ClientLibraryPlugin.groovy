@@ -119,6 +119,7 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
         // remove the optional param from a copy. the normal endpoint doesn't get the optional segment param
         def modifiable_json = jsonSlurper.parseText(JsonOutput.toJson(json))
         modifiable_json.params = modifiable_json.params - optionalUrlSegment
+        modifiable_json.methodName = modifiable_json.methodName + "WithoutId"
         root['endpoints'][normalEndpoint][http_method] = modifiable_json 
       }
     }
