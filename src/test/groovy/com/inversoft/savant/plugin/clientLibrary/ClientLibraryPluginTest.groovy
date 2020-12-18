@@ -88,6 +88,15 @@ class ClientLibraryPluginTest {
   }
 
   @Test
+  void buildOpenapiParamsWithConstantParamAndSegmentRequired() {
+    ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
+    def uri = "abc"
+    def params = [["type": "urlSegment", "name":"foo","required":true],["type": "urlParameter", "name":"bar", "constant":true, "value":"true"]]
+    assert plugin.buildOpenapiUri(uri,params) == ["normal":"abc/{foo}?bar=true"]
+  }
+
+
+  @Test
   void buildOpenapiParamsWithParamsSegmentOptional() {
     ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
     def uri = "abc"

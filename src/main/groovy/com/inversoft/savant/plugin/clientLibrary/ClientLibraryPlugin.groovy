@@ -139,33 +139,34 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
       return ["normal": uri]
     }
 
+    def uriSuffix = ""
     // TODO this doesn't handle roles which are in the url segment
     def constantParams = params.findAll { it.constant != null && it.constant == true && it.value != null && it.type == "urlParameter" }
     if (constantParams && constantParams.size >= 1) {
       def first = true
       for (Map constantParam : constantParams) {
         if (first) {
-          uri += "?"
+          uriSuffix += "?"
         } else {
-          uri += "&"
+          uriSuffix += "&"
         }
-        uri = uri + constantParam.name+"="+constantParam.value
+        uriSuffix = uriSuffix + constantParam.name+"="+constantParam.value
         if (first) { first = false;}
       }
     }
 
     def urlSegments = params.findAll { it.type == "urlSegment" }
     if (!urlSegments || urlSegments.size == 0) {  
-      return ["normal": uri]
+      return ["normal": uri + uriSuffix]
     }
     def optionalUrlSegment = urlSegments.find { it.required != null && it.required == false }
     if (optionalUrlSegment == null) {
       // only the one url segment, it's required 
-      return ["normal": uri+"/{"+urlSegments[0].name+"}"]
+      return ["normal": uri+"/{"+urlSegments[0].name+"}"+uriSuffix]
     } 
     def toReturn = [:]
-    toReturn["withOptionalParam"] = uri+"/{"+optionalUrlSegment.name+"}"
-    toReturn["normal"] = uri
+    toReturn["withOptionalParam"] = uri+"/{"+optionalUrlSegment.name+"}" + uriSuffix
+    toReturn["normal"] = uri + uriSuffix
   
     return toReturn
   }
