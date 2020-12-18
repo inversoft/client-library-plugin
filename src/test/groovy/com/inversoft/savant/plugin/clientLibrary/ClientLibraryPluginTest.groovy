@@ -48,16 +48,72 @@ class ClientLibraryPluginTest {
   @BeforeMethod
   void beforeMethod() {
     output = new SystemOutOutput(true)
-  }
-
-  @Test
-  void buildClient() {
     project = new Project(projectDir.resolve("test-project-tomcat"), output)
     project.group = "com.inversoft.cleanspeak"
     project.name = "cleanspeak-search-engine"
     project.version = new Version("1.0")
     project.licenses.put(License.ApacheV2_0, null)
+  }
 
+  @Test
+  void buildOpenapiParamsSimple() {
+    ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
+    def uri = "abc"
+    def params = []
+    assert plugin.buildOpenapiUri(uri,params) == ["normal":"abc"]
+  }
+
+  @Test
+  void buildOpenapiParamsWithConstantParam() {
+    ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
+    def uri = "abc"
+    def params = [["type": "urlParameter", "name":"foo", "constant":true, "value":"true"]]
+    assert plugin.buildOpenapiUri(uri,params) == ["normal":"abc?foo=true"]
+  }
+
+  @Test
+  void buildOpenapiParamsWithParamsNoSegment() {
+    ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
+    def uri = "abc"
+    def params = [["type": "urlParameter", "name":"foo"]]
+    assert plugin.buildOpenapiUri(uri,params) == ["normal":"abc"]
+  }
+
+  @Test
+  void buildOpenapiParamsWithParamsSegmentRequired() {
+    ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
+    def uri = "abc"
+    def params = [["type": "urlSegment", "name":"foo","required":true]]
+    assert plugin.buildOpenapiUri(uri,params) == ["normal":"abc/{foo}"]
+  }
+
+  @Test
+  void buildOpenapiParamsWithConstantParamAndSegmentRequired() {
+    ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
+    def uri = "abc"
+    def params = [["type": "urlSegment", "name":"foo","required":true],["type": "urlParameter", "name":"bar", "constant":true, "value":"true"]]
+    assert plugin.buildOpenapiUri(uri,params) == ["normal":"abc/{foo}?bar=true"]
+  }
+
+
+  @Test
+  void buildOpenapiParamsWithParamsSegmentOptional() {
+    ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
+    def uri = "abc"
+    def params = [["type": "urlSegment", "name":"foo","required":false]]
+    assert plugin.buildOpenapiUri(uri,params) == ["withOptionalParam": "abc/{foo}", "normal":"abc"]
+  }
+
+  @Test
+  void buildOpenapiParamsWithMultParamsSegmentOptional() {
+    ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
+    def uri = "abc"
+    def params = [["type": "urlSegment", "name":"foo","required":false], ["type": "urlParameter", "name":"bar"]]
+    assert plugin.buildOpenapiUri(uri,params) == ["withOptionalParam": "abc/{foo}", "normal":"abc"]
+  }
+
+  @Test
+  void buildClient() {
     ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
     plugin.settings.debug = true
     plugin.settings.jsonDirectory = Paths.get("src/test/api")
@@ -66,12 +122,6 @@ class ClientLibraryPluginTest {
 
   @Test
   void buildDomain() {
-    project = new Project(projectDir.resolve("test-project-tomcat"), output)
-    project.group = "com.inversoft.cleanspeak"
-    project.name = "cleanspeak-search-engine"
-    project.version = new Version("1.0")
-    project.licenses.put(License.ApacheV2_0, null)
-
     ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
     plugin.settings.debug = true
     plugin.settings.jsonDirectory = Paths.get("src/test/api")

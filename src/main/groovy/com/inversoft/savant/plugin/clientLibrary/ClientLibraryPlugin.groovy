@@ -21,6 +21,7 @@ import freemarker.template.Configuration
 import freemarker.template.Template
 import freemarker.template.TemplateException
 import groovy.io.FileType
+import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovy.json.internal.LazyMap
 import org.inversoft.Java2Json
@@ -77,15 +78,50 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
     }
 
     def root = [
-        'apis'                : [],
-        'domain'              : [],
-        'camel_to_underscores': new CamelToUnderscores()
+        'apis'                                     : [],
+        'endpoints'                                : [:],
+        'domain'                                   : [],
+        'camel_to_underscores'                     : new CamelToUnderscores()
     ]
     def jsonSlurper = new JsonSlurper()
     def files = []
     settings.jsonDirectory.eachFile(FileType.FILES) { files << it }
     files.sort().each { f ->
-      root['apis'] << jsonSlurper.parse(f.toFile())
+      def json = jsonSlurper.parse(f.toFile())
+      root['apis'] << json
+
+      // gather up json by endpoint/http method so that we can build openapi file
+      // most endpoints only have one option, but some have two, with and without a param
+      def endpoints = buildOpenapiUri(json.uri, json.params)
+      def normalEndpoint = endpoints["normal"]
+      def endpointWithOptionalParam = endpoints["withOptionalParam"]
+      def http_method = json.method
+      
+      if (!root['endpoints'][normalEndpoint]) {
+        root['endpoints'][normalEndpoint] = [:]
+      }
+      def onlyNormal = endpointWithOptionalParam == null
+      if (onlyNormal) {
+        // handle normal case
+        root['endpoints'][normalEndpoint][http_method] = json
+
+      } else {
+        // handle case with param
+        if (!root['endpoints'][endpointWithOptionalParam]) {
+          root['endpoints'][endpointWithOptionalParam] = [:]
+        }
+        root['endpoints'][endpointWithOptionalParam][http_method] = json
+        
+        // handle with optional params
+  
+        def optionalUrlSegment = json.params.find { it.required != null && it.required == false && it.type == "urlSegment"  } 
+
+        // remove the optional param from a copy. the normal endpoint doesn't get the optional segment param
+        def modifiable_json = jsonSlurper.parseText(JsonOutput.toJson(json))
+        modifiable_json.params = modifiable_json.params - optionalUrlSegment
+        modifiable_json.methodName = modifiable_json.methodName + "WithoutId"
+        root['endpoints'][normalEndpoint][http_method] = modifiable_json 
+      }
     }
 
     if (settings.domainDirectory.toFile().exists()) {
@@ -95,6 +131,44 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
     }
 
     outputFile(FileTools.toPath(parameters['outputFile']), FileTools.toPath(parameters['template']), root, config)
+  }
+
+  //look for urlsegments
+  Map buildOpenapiUri(uri, params) {
+    if (!params || params.size == 0) {  
+      return ["normal": uri]
+    }
+
+    def uriSuffix = ""
+    // TODO this doesn't handle roles which are in the url segment
+    def constantParams = params.findAll { it.constant != null && it.constant == true && it.value != null && it.type == "urlParameter" }
+    if (constantParams && constantParams.size >= 1) {
+      def first = true
+      for (Map constantParam : constantParams) {
+        if (first) {
+          uriSuffix += "?"
+        } else {
+          uriSuffix += "&"
+        }
+        uriSuffix = uriSuffix + constantParam.name+"="+constantParam.value
+        if (first) { first = false;}
+      }
+    }
+
+    def urlSegments = params.findAll { it.type == "urlSegment" }
+    if (!urlSegments || urlSegments.size == 0) {  
+      return ["normal": uri + uriSuffix]
+    }
+    def optionalUrlSegment = urlSegments.find { it.required != null && it.required == false }
+    if (optionalUrlSegment == null) {
+      // only the one url segment, it's required 
+      return ["normal": uri+"/{"+urlSegments[0].name+"}"+uriSuffix]
+    } 
+    def toReturn = [:]
+    toReturn["withOptionalParam"] = uri+"/{"+optionalUrlSegment.name+"}" + uriSuffix
+    toReturn["normal"] = uri + uriSuffix
+  
+    return toReturn
   }
 
   void outputFile(Path outputFile, Path templateFile, root, Configuration config) {
