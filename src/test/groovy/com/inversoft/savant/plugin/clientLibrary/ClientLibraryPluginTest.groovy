@@ -64,6 +64,14 @@ class ClientLibraryPluginTest {
   }
 
   @Test
+  void buildOpenapiParamsWithConstantParam() {
+    ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
+    def uri = "abc"
+    def params = [["type": "urlParameter", "name":"foo", "constant":true, "value":"true"]]
+    assert plugin.buildOpenapiUri(uri,params) == ["normal":"abc?foo=true"]
+  }
+
+  @Test
   void buildOpenapiParamsWithParamsNoSegment() {
     ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
     def uri = "abc"

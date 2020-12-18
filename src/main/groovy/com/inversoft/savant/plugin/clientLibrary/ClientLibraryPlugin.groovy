@@ -138,13 +138,29 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
     if (!params || params.size == 0) {  
       return ["normal": uri]
     }
+
+    // TODO this doesn't handle roles which are in the url segment
+    def constantParams = params.findAll { it.constant != null && it.constant == true && it.value != null && it.type == "urlParameter" }
+    if (constantParams && constantParams.size >= 1) {
+      def first = true
+      for (Map constantParam : constantParams) {
+        if (first) {
+          uri += "?"
+        } else {
+          uri += "&"
+        }
+        uri = uri + constantParam.name+"="+constantParam.value
+        if (first) { first = false;}
+      }
+    }
+
     def urlSegments = params.findAll { it.type == "urlSegment" }
     if (!urlSegments || urlSegments.size == 0) {  
       return ["normal": uri]
     }
     def optionalUrlSegment = urlSegments.find { it.required != null && it.required == false }
     if (optionalUrlSegment == null) {
-      // only the one url segment, it's required TODO might not be invarant
+      // only the one url segment, it's required 
       return ["normal": uri+"/{"+urlSegments[0].name+"}"]
     } 
     def toReturn = [:]
