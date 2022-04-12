@@ -1,7 +1,7 @@
 import java.nio.file.Paths
 
 /*
- * Copyright (c) 2014-2019, Inversoft Inc., All Rights Reserved
+ * Copyright (c) 2014-2022, Inversoft Inc., All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,25 +17,31 @@ import java.nio.file.Paths
  */
 savantVersion = "1.0.0"
 
-project(group: "com.inversoft.savant.plugin", name: "client-library", version: "0.3.3", licenses: ["ApacheV2_0"]) {
+project(group: "com.inversoft.savant.plugin", name: "client-library", version: "0.3.4", licenses: ["ApacheV2_0"]) {
   workflow {
-    standard()
+    fetch {
+      cache()
+      url(url: "https://repository.savantbuild.org")
+    }
+    publish {
+      cache()
+    }
   }
 
   publishWorkflow {
-    subversion(repository: "http://svn.inversoft.org/savant")
+    subversion(repository: "https://svn.savantbuild.org")
   }
 
   dependencies {
     group(name: "provided") {
-      dependency(id: "org.savantbuild:savant-core:${savantVersion}")
-      dependency(id: "org.savantbuild:savant-dependency-management:${savantVersion}")
-      dependency(id: "org.savantbuild:savant-utils:${savantVersion}")
+      dependency(id: "org.savantbuild:savant-core:1.0.1")
+      dependency(id: "org.savantbuild:savant-dependency-management:1.0.0")
+      dependency(id: "org.savantbuild:savant-utils:1.0.0")
     }
     group(name: "compile") {
-      dependency(id: "org.savantbuild:savant-io:${savantVersion}")
-      dependency(id: "org.freemarker:freemarker:2.3.28")
-      dependency(id: "org.inversoft:java2json:1.3.2")
+      dependency(id: "org.savantbuild:savant-io:1.0.3")
+      dependency(id: "org.freemarker:freemarker:2.3.30")
+      dependency(id: "org.inversoft:java2json:1.4.0-{integration}")
     }
     group(name: "test-compile", export: false) {
       dependency(id: "org.testng:testng:6.8.7")
@@ -48,10 +54,10 @@ project(group: "com.inversoft.savant.plugin", name: "client-library", version: "
 }
 
 // Plugins
-dependency = loadPlugin(id: "org.savantbuild.plugin:dependency:${savantVersion}")
-groovy = loadPlugin(id: "org.savantbuild.plugin:groovy:${savantVersion}")
-groovyTestNG = loadPlugin(id: "org.savantbuild.plugin:groovy-testng:${savantVersion}")
-idea = loadPlugin(id: "org.savantbuild.plugin:idea:${savantVersion}")
+dependency = loadPlugin(id: "org.savantbuild.plugin:dependency:1.0.2")
+groovy = loadPlugin(id: "org.savantbuild.plugin:groovy:1.0.3")
+groovyTestNG = loadPlugin(id: "org.savantbuild.plugin:groovy-testng:1.0.5")
+idea = loadPlugin(id: "org.savantbuild.plugin:idea:1.0.1")
 release = loadPlugin(id: "org.savantbuild.plugin:release-git:${savantVersion}")
 
 // Plugin settings

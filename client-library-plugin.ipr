@@ -162,30 +162,9 @@
         </value>
       </option>
       <option name="LINE_SEPARATOR" value="&#10;" />
-      <JetCodeStyleSettings>
-        <option name="PACKAGES_TO_USE_STAR_IMPORTS">
-          <value>
-            <package name="java.util" alias="false" withSubpackages="false" />
-            <package name="kotlinx.android.synthetic" alias="false" withSubpackages="true" />
-            <package name="io.ktor" alias="false" withSubpackages="true" />
-          </value>
-        </option>
-        <option name="PACKAGES_IMPORT_LAYOUT">
-          <value>
-            <package name="" alias="false" withSubpackages="true" />
-            <package name="java" alias="false" withSubpackages="true" />
-            <package name="javax" alias="false" withSubpackages="true" />
-            <package name="kotlin" alias="false" withSubpackages="true" />
-            <package name="" alias="true" withSubpackages="true" />
-          </value>
-        </option>
-      </JetCodeStyleSettings>
       <ScalaCodeStyleSettings>
         <option name="MULTILINE_STRING_CLOSING_QUOTES_ON_NEW_LINE" value="true" />
       </ScalaCodeStyleSettings>
-      <XML>
-        <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
-      </XML>
       <codeStyleSettings language="Groovy">
         <indentOptions>
           <option name="INDENT_SIZE" value="2" />
@@ -244,8 +223,13 @@
       <module fileurl="file://$PROJECT_DIR$/client-library-plugin.iml" filepath="$PROJECT_DIR$/client-library-plugin.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" default="false" project-jdk-name="Java 1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" project-jdk-name="Java 1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="SwUserDefinedSpecifications">
+    <option name="specTypeByUrl">
+      <map />
+    </option>
   </component>
   <component name="TemplateDataLanguageMappings">
     <file url="file://$PROJECT_DIR$/src/test/client/java.client.ftl" dialect="JAVA" />
