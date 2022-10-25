@@ -226,11 +226,6 @@
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" project-jdk-name="Java 1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
-  <component name="SwUserDefinedSpecifications">
-    <option name="specTypeByUrl">
-      <map />
-    </option>
-  </component>
   <component name="TemplateDataLanguageMappings">
     <file url="file://$PROJECT_DIR$/src/test/client/java.client.ftl" dialect="JAVA" />
     <file url="file://$PROJECT_DIR$/src/test/client/java.domain.ftl" dialect="JAVA" />

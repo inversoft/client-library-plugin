@@ -22,7 +22,7 @@ import freemarker.template.Template
 import freemarker.template.TemplateException
 import groovy.io.FileType
 import groovy.json.JsonSlurper
-import groovy.json.internal.LazyMap
+import org.apache.groovy.json.internal.LazyMap
 import org.inversoft.Java2Json
 import org.savantbuild.domain.Project
 import org.savantbuild.io.FileTools

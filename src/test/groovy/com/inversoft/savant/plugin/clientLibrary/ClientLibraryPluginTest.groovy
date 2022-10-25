@@ -16,8 +16,8 @@
 package com.inversoft.savant.plugin.clientLibrary
 
 import org.savantbuild.dep.domain.License
-import org.savantbuild.dep.domain.Version
 import org.savantbuild.domain.Project
+import org.savantbuild.domain.Version
 import org.savantbuild.output.Output
 import org.savantbuild.output.SystemOutOutput
 import org.savantbuild.runtime.RuntimeConfiguration
@@ -56,7 +56,7 @@ class ClientLibraryPluginTest {
     project.group = "com.inversoft.cleanspeak"
     project.name = "cleanspeak-search-engine"
     project.version = new Version("1.0")
-    project.licenses.put(License.ApacheV2_0, null)
+    project.licenses.add(License.parse("ApacheV2_0", null))
 
     ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
     plugin.settings.debug = true
@@ -70,7 +70,7 @@ class ClientLibraryPluginTest {
     project.group = "com.inversoft.cleanspeak"
     project.name = "cleanspeak-search-engine"
     project.version = new Version("1.0")
-    project.licenses.put(License.ApacheV2_0, null)
+    project.licenses.add(License.parse("ApacheV2_0", null))
 
     ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
     plugin.settings.debug = true
