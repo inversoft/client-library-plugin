@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2017, Inversoft Inc., All Rights Reserved
+ * Copyright (c) 2014-2023, Inversoft Inc., All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -147,6 +147,7 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
       root.type_to_package.put(domain.type, domain.packageName)
     }
 
+    root.domain.sort Comparator.comparing { a -> a.type }.thenComparing { a -> a.packageName }
     root.domain.each { LazyMap domain ->
       root.domain_item = domain
       root.types_in_use = collectTypes(domain)
