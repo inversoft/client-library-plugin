@@ -55,7 +55,7 @@ class ClientLibraryPluginTest {
     project = new Project(projectDir.resolve("test-project-tomcat"), output)
     project.group = "com.inversoft.cleanspeak"
     project.name = "cleanspeak-search-engine"
-    project.version = new Version("1.0")
+    project.version = new Version("1.0.0")
     project.licenses.add(License.parse("ApacheV2_0", null))
 
     ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
@@ -69,7 +69,7 @@ class ClientLibraryPluginTest {
     project = new Project(projectDir.resolve("test-project-tomcat"), output)
     project.group = "com.inversoft.cleanspeak"
     project.name = "cleanspeak-search-engine"
-    project.version = new Version("1.0")
+    project.version = new Version("1.0.0")
     project.licenses.add(License.parse("ApacheV2_0", null))
 
     ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)

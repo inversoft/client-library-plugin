@@ -33,16 +33,16 @@ project(group: "com.inversoft.savant.plugin", name: "client-library", version: "
 
   dependencies {
     group(name: "provided") {
-      dependency(id: "org.apache.groovy:groovy-json:4.0.5")
-      dependency(id: "org.savantbuild:savant-core:2.0.0-RC.2")
-      dependency(id: "org.savantbuild:savant-dependency-management:2.0.0-RC.2")
-      dependency(id: "org.savantbuild:savant-utils:2.0.0-RC.2")
-      dependency(id: "org.savantbuild:savant-version:2.0.0-RC.2")
+      dependency(id: "org.apache.groovy:groovy-json:4.0.22")
+      dependency(id: "org.savantbuild:savant-core:2.0.0-RC.8")
+      dependency(id: "org.savantbuild:savant-dependency-management:2.0.0-RC.7")
+      dependency(id: "org.savantbuild:savant-utils:2.0.0-RC.7")
+      dependency(id: "org.savantbuild:savant-version:2.0.0-RC.7")
     }
     group(name: "compile") {
       dependency(id: "org.freemarker:freemarker:2.3.30")
       dependency(id: "org.inversoft:java2json:1.3.2")
-      dependency(id: "org.savantbuild:savant-io:2.0.0-RC.2")
+      dependency(id: "org.savantbuild:savant-io:2.0.0-RC.7")
     }
     group(name: "test-compile", export: false) {
       dependency(id: "org.testng:testng:6.8.7")
@@ -55,18 +55,18 @@ project(group: "com.inversoft.savant.plugin", name: "client-library", version: "
 }
 
 // Plugins
-dependency = loadPlugin(id: "org.savantbuild.plugin:dependency:2.0.0-RC.4")
-groovy = loadPlugin(id: "org.savantbuild.plugin:groovy:2.0.0-RC.4")
-groovyTestNG = loadPlugin(id: "org.savantbuild.plugin:groovy-testng:2.0.0-RC.5")
-idea = loadPlugin(id: "org.savantbuild.plugin:idea:2.0.0-RC.4")
-release = loadPlugin(id: "org.savantbuild.plugin:release-git:2.0.0-RC.4")
+def dependency = loadPlugin(id: "org.savantbuild.plugin:dependency:2.0.0-RC.7")
+def groovy = loadPlugin(id: "org.savantbuild.plugin:groovy:2.0.0-RC.7")
+def groovyTestNG = loadPlugin(id: "org.savantbuild.plugin:groovy-testng:2.0.0-RC.7")
+def idea = loadPlugin(id: "org.savantbuild.plugin:idea:2.0.0-RC.7")
+def release = loadPlugin(id: "org.savantbuild.plugin:release-git:2.0.0-RC.6")
 
 // Plugin settings
 groovy.settings.groovyVersion = "4.0"
-groovy.settings.javaVersion = "1.8"
+groovy.settings.javaVersion = "21"
 groovy.settings.jarManifest["Savant-Plugin-Class"] = "com.inversoft.savant.plugin.clientLibrary.ClientLibraryPlugin"
 groovyTestNG.settings.groovyVersion = "4.0"
-groovyTestNG.settings.javaVersion = "1.8"
+groovyTestNG.settings.javaVersion = "21"
 idea.settings.imlFile = Paths.get("client-library-plugin.iml")
 
 target(name: "clean", description: "Cleans the project") {
