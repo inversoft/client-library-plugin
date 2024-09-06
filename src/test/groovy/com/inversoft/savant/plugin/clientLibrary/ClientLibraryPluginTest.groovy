@@ -83,9 +83,7 @@ class ClientLibraryPluginTest {
     plugin.buildDomain(template: "src/test/client/java.domain.ftl", outputDir: "build", extension: "java")
   }
 
-  @Test
-  void generateDomainJson() {
-    // arrange
+  def generateDomainJson() {
     project = new Project(projectDir.resolve("test-project-tomcat"), output)
     project.group = "com.inversoft.cleanspeak"
     project.name = "cleanspeak-search-engine"
@@ -104,19 +102,56 @@ class ClientLibraryPluginTest {
     plugin.generateDomainJson(srcDir: "src/test/groovy/com/inversoft/savant/plugin/clientLibrary/jsonGenerate",
         outDir: "build/test/domain")
 
+    return outputDir
+  }
+
+  def compare(File outputDir, String expectedIdentifier, Map expectedPayload) {
+    def prettyActual = JsonOutput.prettyPrint(JsonOutput.toJson(new JsonSlurper().parse(new File(outputDir, "com.inversoft.savant.plugin.clientLibrary.jsonGenerate.${expectedIdentifier}.json"))))
+    def prettyExpected = JsonOutput.prettyPrint(JsonOutput.toJson(expectedPayload))
+    Assert.assertEquals(prettyActual,
+        prettyExpected)
+  }
+
+  @Test
+  void generateDomainJson_simple_class_field() {
+    // arrange + act
+    def outputDir = generateDomainJson()
+
     // assert
-    def prettyActual = JsonOutput.prettyPrint(JsonOutput.toJson(new JsonSlurper().parse(new File(outputDir, "com.inversoft.savant.plugin.clientLibrary.jsonGenerate.ClassForJSONGeneration.json"))))
-    def prettyExpected = JsonOutput.prettyPrint(JsonOutput.toJson([
+    compare(outputDir, "SimpleClassWithField", [
         packageName: "com.inversoft.savant.plugin.clientLibrary.jsonGenerate",
-        type       : "ClassForJSONGeneration",
+        type: "SimpleClassWithField",
         fields     : [
             doStuff: [
                 type: "String"
             ]
         ]
-    ]))
-    Assert.assertEquals(prettyActual,
-        prettyExpected)
-    Assert.fail("Write it")
+    ])
+  }
+
+  @Test
+  void generateDomainJson_interface_no_methods() {
+    // arrange + act
+    def outputDir = generateDomainJson()
+
+    // assert
+    compare(outputDir, "InterfaceNoMethods", [
+        packageName: "com.inversoft.savant.plugin.clientLibrary.jsonGenerate",
+        type       : "InterfaceNoMethods",
+        fields     : [:]
+    ])
+  }
+
+  @Test
+  void generateDomainJson_interface_1_method() {
+    // arrange + act
+    def outputDir = generateDomainJson()
+
+    // assert
+    compare(outputDir, "InterfaceOneMethod", [
+        packageName: "com.inversoft.savant.plugin.clientLibrary.jsonGenerate",
+        type       : "InterfaceOneMethod",
+        fields     : [:]
+    ])
   }
 }
