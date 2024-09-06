@@ -154,4 +154,17 @@ class ClientLibraryPluginTest {
         fields     : [:]
     ])
   }
+
+  @Test
+  void generateDomainJson_interface_getter_method() {
+    // arrange + act
+    def outputDir = generateDomainJson()
+
+    // assert
+    compare(outputDir, "InterfaceGetterMethod", [
+        packageName: "com.inversoft.savant.plugin.clientLibrary.jsonGenerate",
+        type       : "InterfaceGetterMethod",
+        fields     : [:]
+    ])
+  }
 }
