@@ -21,14 +21,16 @@ jobs:
           SAVANT_PATH=$(realpath -s "./savant-2.0.0-RC.8/bin")
           echo "${SAVANT_PATH}" >> $GITHUB_PATH
           mkdir -p ~/.savant/plugins
+          JAVA_HOME="${JAVA_HOME_21_X64}"
           # For now, using the 21 JDK that comes on the GHA runner
           cat << EOF > ~/.savant/plugins/org.savantbuild.plugin.java.properties
-          21=${JAVA_HOME_21_X64}
+          21=${JAVA_HOME}
           EOF
+          echo "JAVA_HOME=${JAVA_HOME}" >> $GITHUB_ENV
           # Groovy does not come with runners OOB
           curl -O https://groovy.jfrog.io/artifactory/dist-release-local/groovy-zips/apache-groovy-binary-4.0.22.zip
           unzip apache-groovy-binary-4.0.22.zip
-          GROOVY_PATH=$(realpath -s "./groovy-4.0.22/bin")
+          GROOVY_PATH=$(realpath -s "./groovy-4.0.22")
           cat << EOF > ~/.savant/plugins/org.savantbuild.plugin.groovy.properties
           4.0=${GROOVY_PATH}
           EOF
