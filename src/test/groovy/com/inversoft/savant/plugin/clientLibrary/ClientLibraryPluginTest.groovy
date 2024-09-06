@@ -15,7 +15,8 @@
  */
 package com.inversoft.savant.plugin.clientLibrary
 
-
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 import org.savantbuild.dep.domain.License
 import org.savantbuild.domain.Project
 import org.savantbuild.domain.Version
@@ -29,6 +30,7 @@ import org.testng.annotations.Test
 
 import java.nio.file.Path
 import java.nio.file.Paths
+
 /**
  * Tests the tomcat plugin.
  *
@@ -94,12 +96,27 @@ class ClientLibraryPluginTest {
     plugin.settings.debug = true
     plugin.settings.jsonDirectory = Paths.get("src/test/api")
     plugin.settings.domainDirectory = Paths.get("src/test/domain")
+    def outputDir = new File("build/test/domain")
+    assert outputDir.deleteDir()
+    outputDir.mkdirs()
 
     // act
-    plugin.generateDomainJson(srcDir: "src/test/domain",
+    plugin.generateDomainJson(srcDir: "src/test/groovy/com/inversoft/savant/plugin/clientLibrary/jsonGenerate",
         outDir: "build/test/domain")
 
     // assert
+    def prettyActual = JsonOutput.prettyPrint(JsonOutput.toJson(new JsonSlurper().parse(new File(outputDir, "com.inversoft.savant.plugin.clientLibrary.jsonGenerate.ClassForJSONGeneration.json"))))
+    def prettyExpected = JsonOutput.prettyPrint(JsonOutput.toJson([
+        packageName: "com.inversoft.savant.plugin.clientLibrary.jsonGenerate",
+        type       : "ClassForJSONGeneration",
+        fields     : [
+            doStuff: [
+                type: "String"
+            ]
+        ]
+    ]))
+    Assert.assertEquals(prettyActual,
+        prettyExpected)
     Assert.fail("Write it")
   }
 }
