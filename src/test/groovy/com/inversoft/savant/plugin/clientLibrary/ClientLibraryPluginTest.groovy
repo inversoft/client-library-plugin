@@ -15,25 +15,27 @@
  */
 package com.inversoft.savant.plugin.clientLibrary
 
+
 import org.savantbuild.dep.domain.License
 import org.savantbuild.domain.Project
 import org.savantbuild.domain.Version
 import org.savantbuild.output.Output
 import org.savantbuild.output.SystemOutOutput
 import org.savantbuild.runtime.RuntimeConfiguration
+import org.testng.Assert
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.BeforeSuite
 import org.testng.annotations.Test
 
 import java.nio.file.Path
 import java.nio.file.Paths
-
 /**
  * Tests the tomcat plugin.
  *
  * @author Brian Pontarelli
  */
 class ClientLibraryPluginTest {
+
   public static Path projectDir
 
   Output output
@@ -77,5 +79,27 @@ class ClientLibraryPluginTest {
     plugin.settings.jsonDirectory = Paths.get("src/test/api")
     plugin.settings.domainDirectory = Paths.get("src/test/domain")
     plugin.buildDomain(template: "src/test/client/java.domain.ftl", outputDir: "build", extension: "java")
+  }
+
+  @Test
+  void generateDomainJson() {
+    // arrange
+    project = new Project(projectDir.resolve("test-project-tomcat"), output)
+    project.group = "com.inversoft.cleanspeak"
+    project.name = "cleanspeak-search-engine"
+    project.version = new Version("1.0.0")
+    project.licenses.add(License.parse("ApacheV2_0", null))
+
+    ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
+    plugin.settings.debug = true
+    plugin.settings.jsonDirectory = Paths.get("src/test/api")
+    plugin.settings.domainDirectory = Paths.get("src/test/domain")
+
+    // act
+    plugin.generateDomainJson(srcDir: "src/test/domain",
+        outDir: "build/test/domain")
+
+    // assert
+    Assert.fail("Write it")
   }
 }
