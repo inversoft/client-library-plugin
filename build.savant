@@ -42,7 +42,7 @@ project(group: "com.inversoft.savant.plugin", name: "client-library", version: "
     }
     group(name: "compile") {
       dependency(id: "org.freemarker:freemarker:2.3.30")
-      dependency(id: "org.inversoft:java2json:1.4.0-{integration}")
+      dependency(id: "org.inversoft:java2json:1.4.0")
       dependency(id: "org.savantbuild:savant-io:2.0.0-RC.7")
     }
     group(name: "test-compile", export: false) {
