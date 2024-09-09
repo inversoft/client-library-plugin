@@ -64,10 +64,10 @@ def release = loadPlugin(id: "org.savantbuild.plugin:release-git:2.0.0-RC.6")
 
 // Plugin settings
 groovy.settings.groovyVersion = "4.0"
-groovy.settings.javaVersion = "21"
+groovy.settings.javaVersion = "17"
 groovy.settings.jarManifest["Savant-Plugin-Class"] = "com.inversoft.savant.plugin.clientLibrary.ClientLibraryPlugin"
 groovyTestNG.settings.groovyVersion = "4.0"
-groovyTestNG.settings.javaVersion = "21"
+groovyTestNG.settings.javaVersion = "17"
 idea.settings.imlFile = Paths.get("client-library-plugin.iml")
 
 target(name: "clean", description: "Cleans the project") {
