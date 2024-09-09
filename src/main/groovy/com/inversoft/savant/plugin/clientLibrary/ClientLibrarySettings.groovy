@@ -29,4 +29,6 @@ class ClientLibrarySettings {
   Path domainDirectory = Paths.get("src/main/domain")
 
   boolean debug = false
+
+  boolean includeGettersFromInterfacesAsFields = false
 }

@@ -83,7 +83,7 @@ class ClientLibraryPluginTest {
     plugin.buildDomain(template: "src/test/client/java.domain.ftl", outputDir: "build", extension: "java")
   }
 
-  def generateDomainJson() {
+  def generateDomainJson(boolean includeGettersFromInterfacesAsFields = false) {
     project = new Project(projectDir.resolve("test-project-tomcat"), output)
     project.group = "com.inversoft.cleanspeak"
     project.name = "cleanspeak-search-engine"
@@ -94,6 +94,7 @@ class ClientLibraryPluginTest {
     plugin.settings.debug = true
     plugin.settings.jsonDirectory = Paths.get("src/test/api")
     plugin.settings.domainDirectory = Paths.get("src/test/domain")
+    plugin.settings.includeGettersFromInterfacesAsFields = includeGettersFromInterfacesAsFields
     def outputDir = new File("build/test/domain")
     assert outputDir.deleteDir()
     outputDir.mkdirs()
@@ -165,6 +166,23 @@ class ClientLibraryPluginTest {
         packageName: "com.inversoft.savant.plugin.clientLibrary.jsonGenerate",
         type       : "InterfaceGetterMethod",
         fields     : [:]
+    ])
+  }
+
+  @Test
+  void generateDomainJson_interface_getter_method_enabled() {
+    // arrange + act
+    def outputDir = generateDomainJson(true)
+
+    // assert
+    compare(outputDir, "InterfaceGetterMethod", [
+        packageName: "com.inversoft.savant.plugin.clientLibrary.jsonGenerate",
+        type       : "InterfaceGetterMethod",
+        fields     : [
+            hello: [
+                type: "String"
+            ]
+        ]
     ])
   }
 }
