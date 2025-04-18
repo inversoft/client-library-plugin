@@ -89,7 +89,10 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
     }
 
     if (settings.domainDirectory.toFile().exists()) {
-      settings.domainDirectory.eachFile(FileType.FILES) { f ->
+      def domainFiles = []
+      settings.domainDirectory.eachFile(FileType.FILES) { domainFiles << it }
+      domainFiles.sort Comparator.comparing { f -> f.toFile().name.split("\\.")[-2] } // sort by class name
+      domainFiles.each { f ->
         root['domain'] << jsonSlurper.parse(f.toFile())
       }
     }
@@ -138,7 +141,10 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
     def jsonSlurper = new JsonSlurper()
 
     if (settings.domainDirectory.toFile().exists()) {
-      settings.domainDirectory.eachFile(FileType.FILES) { f ->
+      def domainFiles = []
+      settings.domainDirectory.eachFile(FileType.FILES) { domainFiles << it }
+      domainFiles.sort Comparator.comparing { f -> f.toFile().name.split("\\.")[-2] } // sort by class name
+      domainFiles.each { f ->
         root['domain'] << jsonSlurper.parse(f.toFile())
       }
     }
