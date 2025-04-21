@@ -29,7 +29,7 @@ jobs:
           EOF
           echo "JAVA_HOME=${JAVA_HOME}" >> $GITHUB_ENV
           # Groovy does not come with runners OOB
-          curl -O https://groovy.jfrog.io/artifactory/dist-release-local/groovy-zips/apache-groovy-binary-4.0.22.zip
+          curl -LO https://groovy.jfrog.io/artifactory/dist-release-local/groovy-zips/apache-groovy-binary-4.0.22.zip
           unzip apache-groovy-binary-4.0.22.zip
           GROOVY_PATH=$(realpath -s "./groovy-4.0.22")
           cat << EOF > ~/.savant/plugins/org.savantbuild.plugin.groovy.properties
