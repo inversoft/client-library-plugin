@@ -16,7 +16,7 @@ import java.nio.file.Paths
  * language governing permissions and limitations under the License.
  */
 
-project(group: "com.inversoft.savant.plugin", name: "client-library", version: "0.4.3", licenses: ["ApacheV2_0"]) {
+project(group: "com.inversoft.savant.plugin", name: "client-library", version: "0.4.4", licenses: ["ApacheV2_0"]) {
   workflow {
     fetch {
       cache()
