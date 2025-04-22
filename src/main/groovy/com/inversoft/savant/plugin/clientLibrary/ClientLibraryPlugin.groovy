@@ -143,13 +143,14 @@ class ClientLibraryPlugin extends BaseGroovyPlugin {
     if (settings.domainDirectory.toFile().exists()) {
       def domainFiles = []
       settings.domainDirectory.eachFile(FileType.FILES) { domainFiles << it }
-      domainFiles.sort Comparator.comparing { f -> f.toFile().name.split("\\.")[-2] } // sort by class name
       domainFiles.each { f ->
         root['domain'] << jsonSlurper.parse(f.toFile())
       }
     }
 
     root.domain.each { domain ->
+      // TODO - this overwrites previous entries when we reuse names for static inner classes
+      // E.g., LambdaConfiguration
       root.type_to_package.put(domain.type, domain.packageName)
     }
 
