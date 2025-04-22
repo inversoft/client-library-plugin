@@ -1,0 +1,10 @@
+{
+  "packageName" : "com.inversoft.logging",
+  "type" : "Warning",
+  "description" : "/**\n * Defines a warning.\n *\n * @author Brent Halsey\n */\n",
+  "fields" : {
+    "message" : {
+      "type" : "String"
+    }
+  }
+}

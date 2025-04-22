@@ -1,0 +1,10 @@
+{
+  "packageName" : "com.inversoft.logging",
+  "type" : "Trace",
+  "description" : "/**\n * Defines a trace message.\n *\n * @author Brent Halsey\n */\n",
+  "fields" : {
+    "message" : {
+      "type" : "String"
+    }
+  }
+}

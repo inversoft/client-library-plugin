@@ -1,0 +1,10 @@
+{
+  "packageName" : "com.inversoft.logging",
+  "type" : "Debug",
+  "description" : "/**\n * Defines a debug message.\n *\n * @author Brent Halsey\n */\n",
+  "fields" : {
+    "message" : {
+      "type" : "String"
+    }
+  }
+}
