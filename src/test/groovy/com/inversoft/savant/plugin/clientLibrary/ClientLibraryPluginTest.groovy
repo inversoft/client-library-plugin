@@ -31,6 +31,8 @@ import org.testng.annotations.Test
 import java.nio.file.Path
 import java.nio.file.Paths
 
+import static org.testng.Assert.assertEquals
+
 /**
  * Tests the tomcat plugin.
  *
@@ -66,6 +68,27 @@ class ClientLibraryPluginTest {
     plugin.settings.debug = true
     plugin.settings.jsonDirectory = Paths.get("src/test/api")
     plugin.buildClient(template: "src/test/client/java.client.ftl", outputFile: "build/Test.java")
+  }
+
+  @Test
+  void buildGoClient() {
+    // simplified go client. Verify the domain objects are sorted in alphabetical order
+    // regardless of the package name
+
+    project = new Project(projectDir.resolve("test-project-tomcat"), output)
+    project.group = "com.inversoft.cleanspeak"
+    project.name = "cleanspeak-search-engine"
+    project.version = new Version("1.0.0")
+    project.licenses.add(License.parse("ApacheV2_0", null))
+
+    ClientLibraryPlugin plugin = new ClientLibraryPlugin(project, new RuntimeConfiguration(), output)
+    plugin.settings.debug = false
+    plugin.settings.jsonDirectory = Paths.get("src/test/api")
+    plugin.settings.domainDirectory = Paths.get("src/test/domain")
+    plugin.buildClient(template: "src/test/client/go.domain.test.ftl", outputFile: "build/Domain_test.go")
+    def actual = new File("build/Domain_test.go").text
+    def expected = new File("src/test/client/Domain_test.go").text
+    assertEquals(actual, expected)
   }
 
   @Test
